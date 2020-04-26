@@ -1,0 +1,170 @@
+openapi: 3.0.1
+info:
+  title: PK Global Customer api
+  description: 'This is server app for CustomerServiceApi server.'
+  termsOfService: http://pkg.io/terms/
+  contact:
+    email: amarreddy@pkglobal.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: https://customer.swagger.io/v2
+- url: http://customer.swagger.io/v2
+tags:
+- name: customer
+  description: Everything about your customers
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+paths:
+  /customer/add:
+    post:
+      tags:
+      - customer
+      summary: Add a new customer
+      operationId: addCustomer
+      security: 
+      - oauth2token: []
+      parameters: 
+        - in: header
+          name: Activity-Id
+          schema: 
+            type: string
+          required: true
+        - in: header
+          name: Application-Id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: customer object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        200:
+          description: "Success."
+          content: 
+             application/json:
+                schema:
+                  $ref: "#/components/schemas/Response"
+        500:
+          description: "server error"
+          content: 
+             application/json:
+                schema:
+                  $ref: "#/components/schemas/Response"
+        400:
+          description: "badrequest error"
+          content: 
+             application/json:
+                schema:
+                  $ref: "#/components/schemas/Response"
+        401:
+          description: "unaothorized error"
+          content: 
+             application/json:
+                schema:
+                  $ref: "#/components/schemas/Response"
+components:
+  schemas:
+    Customer:
+      required: 
+      - customerNumber
+      - firstName
+      - lastName
+      - birthDate
+      - country
+      - countryCode
+      - mobileNumber
+      - email
+      - customerStatus
+      type: object
+      properties:
+        customerNumber:
+          type: string
+          pattern: "[A-Z0-9]{1,10}"
+          maxLength: 10
+        firstName:
+          type: string
+          minLength: 10
+          maxLength: 50
+        lastName:
+          type: string
+          minimum: 10
+          maxLength: 50
+        birthDate:
+          type: string
+          format: date
+        country:
+          type: string
+        countryCode:
+          type: string
+          maxLength: 2
+          minLength: 2
+        mobileNumber:
+          type: integer
+          maxLength: 10
+        email:
+          type: string
+          format: email
+          maxLength: 50
+        customerStatus:
+          type: string
+          description: valid customer statuses
+          enum: 
+          - Open
+          - Close
+          - Suspended
+          - Restored
+        address:
+          $ref: '#/components/schemas/Address'
+          
+    Address:
+      required: 
+      - addressLine1
+      type: object
+      properties:
+        addressLine1:
+          type: string
+          maxLength: 50
+        addressLine2:
+          type: string
+        street:
+          type: string
+        postalCode:
+          type: string
+          maxLength: 5
+    Response:
+      required: 
+      - status
+      - message
+      type: object
+      properties:
+        status:
+          type: string
+          description: valid response status
+          enum: 
+          - success
+          - error
+        message:
+          type: string
+        error_type:
+          type: string
+          description: type of exception
+  securitySchemes:
+    oauth2token:
+      type: oauth2
+      flows: 
+        authorizationCode:
+          authorizationUrl: localhost:8080/oauth/authorize  # <-----
+          tokenUrl: localhost:8080/oauth/token              # <-----
+          scopes: {}
+
