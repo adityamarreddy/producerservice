@@ -1,4 +1,4 @@
-package com.prokarma.retail.customer.service.producer.performance.configuration;
+package com.prokarma.retail.customer.service.producer.configuration.performance;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -16,7 +16,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class AopConfiguration {
 
   @Pointcut("execution(* com.prokarma.retail.customer.service.producer.service.CustomerService.*(..)) || execution(* com.prokarma.retail.customer.service.producer.controller.CustomerServiceController.*(..))")
-  public void monitor() {}
+  public void monitor() {
+    // pointcut expression for performance monitoring
+  }
 
   @Bean
   public PerformanceMonitorInterceptor performanceMonitorInterceptor() {
@@ -27,7 +29,7 @@ public class AopConfiguration {
   public Advisor performanceMonitorAdvisor() {
     AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
     pointcut.setExpression(
-        "com.prokarma.retail.customer.service.producer.performance.configuration.AopConfiguration.monitor()");
+        "com.prokarma.retail.customer.service.producer.configuration.performance.AopConfiguration.monitor()");
     return new DefaultPointcutAdvisor(pointcut, performanceMonitorInterceptor());
   }
 

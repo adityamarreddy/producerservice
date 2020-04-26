@@ -10,73 +10,59 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.prokarma.retail.customer.service.producer.exception.CustomerServiceException;
 import com.prokarma.retail.customer.service.producer.model.Customer;
-import com.prokarma.retail.customer.service.producer.util.MaskingUtil;
+import com.prokarma.retail.customer.service.producer.service.helper.MaskHelper;
 
 @Service
 public class CustomerService {
-  @Autowired
-  private ObjectMapper mapper;
 
+  private ObjectMapper jsonMapper;
+  private MaskHelper maskHelper;
   private KafkaTemplate<String, String> kafkaTemplate;
-  private Gson jsonConverter;
   private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
   @Autowired
-  public CustomerService(KafkaTemplate<String, String> kafkaTemplate, Gson jsonConverter) {
+  public CustomerService(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper jsonMapper,
+      MaskHelper maskHelper) {
     this.kafkaTemplate = kafkaTemplate;
-    this.jsonConverter = jsonConverter;
+    this.jsonMapper = jsonMapper;
+    this.maskHelper = maskHelper;
   }
 
-  public void publishToKafka(Customer customer) throws CustomerServiceException, InterruptedException, ExecutionException {
+  public void publishToKafka(Customer customer, String activityId, String applicationId)
+      throws InterruptedException, ExecutionException, JsonProcessingException {
+
     try {
-      System.out.println(mapper.writeValueAsString(customer));
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
-    ListenableFuture<SendResult<String, String>> future =
-        kafkaTemplate.send("customerTopic", jsonConverter.toJson(customer));
-    SendResult<String, String> sendResult;
-    try {
-      sendResult = future.get();
-      sendResult.getProducerRecord().headers();
-    } catch (InterruptedException ex) {
-      LOGGER.error(String.format("failed to publish record to kafka:: %s",
-          jsonConverter.toJson(masked(customer))), ex);
-      throw ex;
+      if(LOGGER.isInfoEnabled()) {
+      LOGGER.info(String.format("Kafka publish:: activityId=%s and applicationId=%s and message %s",
+          activityId, applicationId,
+          jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))));
+      }
+      ListenableFuture<SendResult<String, String>> future =
+          kafkaTemplate.send("customerTopic", jsonMapper.writeValueAsString(customer));
+      future.get();
     } catch (ExecutionException ex) {
-      LOGGER.error(String.format("failed to publish record to kafka:: %s",
-          jsonConverter.toJson(masked(customer))), ex);
+      LOGGER.error(String.format(
+          "failed to publish record to kafka:::: activityId=%s and applicationId=%s and message %s",
+          activityId, applicationId,
+          jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))), ex);
+      throw ex;
+    } catch (JsonProcessingException ex) {
+      LOGGER.error(
+          String.format("Unable to convert customer to json :: activityId=%s and applicationId=%s",
+              activityId, applicationId),
+          ex);
+      throw ex;
+    }
+    catch (Exception ex) {
+      LOGGER.error(String.format(
+          "failed to publish record to kafka:: :: activityId=%s and applicationId=%s and message %s",
+          activityId, applicationId,
+          jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))), ex);
       throw ex;
     }
 
   }
 
-  private Customer masked(Customer customer) {
-    try {
-      customer.setCustomerNumber(MaskingUtil.maskString(customer.getCustomerNumber(),
-          customer.getCustomerNumber().length() - 4, customer.getCustomerNumber().length(), '*'));
-      customer.setEmail(MaskingUtil.maskEmailAddress(customer.getEmail(), '*'));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return customer;
-  }
-}
 
-/*
- * future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
- * 
- * @Override public void onSuccess(SendResult<String, String> result) {
- * LOGGER.info(String.format("record successfully published to kafka:: %s ",
- * jsonConverter.toJson(masked(customer)))); }
- * 
- * @Override public void onFailure(Throwable ex) {
- * LOGGER.error(String.format("failed to publish record to kafka:: %s",
- * jsonConverter.toJson(masked(customer))), ex); }
- * 
- * });
- * 
- */
+}

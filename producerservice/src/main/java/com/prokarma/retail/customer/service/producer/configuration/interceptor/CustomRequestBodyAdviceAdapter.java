@@ -1,9 +1,7 @@
-package com.prokarma.retail.customer.service.producer.configuratioin.interceptor;
+package com.prokarma.retail.customer.service.producer.configuration.interceptor;
 
 import java.lang.reflect.Type;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;

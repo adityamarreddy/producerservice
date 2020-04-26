@@ -9,13 +9,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableAuthorizationServer
 @SpringBootApplication
 @EnableSwagger2
-@ComponentScan(basePackages = {"com.prokarma.retail.customer.service.producer","com.prokarma.retail.customer.service.producer.controller",
+@ComponentScan(basePackages = {"com.prokarma.retail.customer.service.producer",
+    "com.prokarma.retail.customer.service.producer.controller",
     "com.prokarma.retail.customer.service.producer.configuration"})
-public class CustomerServiceApplication {
+public class ProducerServiceApplication {
 
 
-  public static void main(String[] args) throws Exception {
-    new SpringApplication(CustomerServiceApplication.class).run(args);
+  public static void main(String[] args) {
+    new SpringApplication(ProducerServiceApplication.class).run(args);
   }
 
 

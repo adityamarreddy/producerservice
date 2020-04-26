@@ -1,4 +1,4 @@
-package com.prokarma.retail.customer.service.producer.configuratioin.interceptor;
+package com.prokarma.retail.customer.service.producer.configuration.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;

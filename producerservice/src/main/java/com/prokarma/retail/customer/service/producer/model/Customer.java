@@ -1,19 +1,16 @@
 package com.prokarma.retail.customer.service.producer.model;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.springframework.validation.annotation.Validated;
-import org.threeten.bp.LocalDate;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.threetenbp.deser.LocalDateDeserializer;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
