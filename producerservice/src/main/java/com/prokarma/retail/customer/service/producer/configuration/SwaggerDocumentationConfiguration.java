@@ -2,7 +2,10 @@ package com.prokarma.retail.customer.service.producer.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -13,7 +16,20 @@ import springfox.documentation.spring.web.plugins.Docket;
     value = "com.prokarma.retail.customer.service.producer.codegen.v3.generators.java.SpringCodegen",
     date = "2020-04-18T05:15:19.983Z[GMT]")
 @Configuration
-public class SwaggerDocumentationConfiguration {
+public class SwaggerDocumentationConfiguration extends WebMvcConfigurerAdapter {
+  
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+      registry
+              .addResourceHandler("swagger-ui.html")
+              .addResourceLocations("classpath:/META-INF/resources/");
+
+      registry
+              .addResourceHandler("/webjars/**")
+              .addResourceLocations("classpath:/META-INF/resources/webjars/");
+  }
+
 
   ApiInfo apiInfo() {
     return new ApiInfoBuilder().title("PK Global Customer api")

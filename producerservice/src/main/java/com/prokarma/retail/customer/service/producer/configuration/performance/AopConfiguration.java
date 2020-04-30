@@ -15,7 +15,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @Aspect
 public class AopConfiguration {
 
-  @Pointcut("execution(* com.prokarma.retail.customer.service.producer.service.CustomerService.*(..)) || execution(* com.prokarma.retail.customer.service.producer.controller.CustomerServiceController.*(..))")
+  @Pointcut("execution(* com.prokarma.retail.customer.service.producer.service.CustomerService.*(..)) || execution(* com.prokarma.retail.customer.service.producer.controller.ProducerServiceController.*(..))")
   public void monitor() {
     // pointcut expression for performance monitoring
   }

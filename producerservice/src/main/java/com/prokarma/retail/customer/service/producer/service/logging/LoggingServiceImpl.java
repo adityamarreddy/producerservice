@@ -6,37 +6,47 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import com.prokarma.retail.customer.service.producer.service.CustomerService;
 import lombok.extern.java.Log;
 
 @Component
-@Log
+
 public class LoggingServiceImpl implements LoggingService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(LoggingServiceImpl.class);
 
   @Override
   public void logRequest(HttpServletRequest httpServletRequest, Object body) {
-    StringBuilder stringBuilder = new StringBuilder();
-    Map<String, String> parameters = buildParametersMap(httpServletRequest);
+    if(!httpServletRequest.getRequestURI().contains("swagger")){
+      StringBuilder stringBuilder = new StringBuilder();
+      Map<String, String> parameters = buildParametersMap(httpServletRequest);
 
-    stringBuilder.append("REQUEST ");
-    stringBuilder.append("method=[").append(httpServletRequest.getMethod()).append("] ");
-    stringBuilder.append("path=[").append(httpServletRequest.getRequestURI()).append("] ");
-    stringBuilder.append("headers=[").append(buildHeadersMap(httpServletRequest)).append("] ");
+      stringBuilder.append("REQUEST ");
+      stringBuilder.append("method=[").append(httpServletRequest.getMethod()).append("] ");
+      stringBuilder.append("path=[").append(httpServletRequest.getRequestURI()).append("] ");
+      stringBuilder.append("headers=[").append(buildHeadersMap(httpServletRequest)).append("] ");
 
-    if (!parameters.isEmpty()) {
-      stringBuilder.append("parameters=[").append(parameters).append("] ");
+      if (!parameters.isEmpty()) {
+        stringBuilder.append("parameters=[").append(parameters).append("] ");
+      }
+
+      if (body != null) {
+        stringBuilder.append("body=[" + body + "]");
+      }
+
+      LOGGER.info(stringBuilder.toString());
     }
-
-    if (body != null) {
-      stringBuilder.append("body=[" + body + "]");
-    }
-
-    log.info(stringBuilder.toString());
+    
+   
   }
 
   @Override
   public void logResponse(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, Object body) {
+    if(!httpServletRequest.getRequestURI().contains("swagger")){
     StringBuilder stringBuilder = new StringBuilder();
 
     stringBuilder.append("RESPONSE ");
@@ -48,7 +58,8 @@ public class LoggingServiceImpl implements LoggingService {
         .append("] ");
     stringBuilder.append("responseBody=[").append(body).append("] ");
 
-    log.info(stringBuilder.toString());
+    LOGGER.info(stringBuilder.toString());
+  }
   }
 
   private Map<String, String> buildParametersMap(HttpServletRequest httpServletRequest) {

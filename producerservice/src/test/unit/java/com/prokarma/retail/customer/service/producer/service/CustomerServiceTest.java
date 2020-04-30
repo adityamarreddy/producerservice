@@ -25,6 +25,7 @@ import com.prokarma.retail.customer.service.producer.model.Address;
 import com.prokarma.retail.customer.service.producer.model.Customer;
 import com.prokarma.retail.customer.service.producer.model.Customer.CustomerStatusEnum;
 import com.prokarma.retail.customer.service.producer.service.helper.MaskHelper;
+import com.prokarma.retail.customer.service.producer.util.CustomerDataUtil;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,7 +50,7 @@ public class CustomerServiceTest {
     when(jsonMapper.writeValueAsString(Mockito.any(Customer.class))).thenCallRealMethod();
     when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(new AsyncResult<SendResult<String, String>>(null));
-    customerService.publishToKafka(prepareCustomer(), "12345678", "app234567");
+    customerService.publishToKafka(CustomerDataUtil.prepareCustomer(), "12345678", "app234567");
     verify(kafkaTemplate, atLeast(1)).send(Mockito.anyString(), Mockito.anyString());
 
   }
@@ -62,7 +63,7 @@ public class CustomerServiceTest {
         AsyncResult.forExecutionException(new ExecutionException(new InterruptedException()));
     when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(forExecutionException);
-    customerService.publishToKafka(prepareCustomer(), "12345678", "app234567");
+    customerService.publishToKafka(CustomerDataUtil.prepareCustomer(), "12345678", "app234567");
 
   }
 
@@ -72,7 +73,7 @@ public class CustomerServiceTest {
       throws JsonProcessingException, InterruptedException, ExecutionException {
     when(jsonMapper.writeValueAsString(Mockito.any(Customer.class))).thenCallRealMethod();
     when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
-    customerService.publishToKafka(prepareCustomer(), "12345678", "app234567");
+    customerService.publishToKafka(CustomerDataUtil.prepareCustomer(), "12345678", "app234567");
 
   }
 
@@ -83,34 +84,11 @@ public class CustomerServiceTest {
     when(jsonMapper.writeValueAsString(Mockito.any(Customer.class)))
         .thenThrow(new JsonParseException("unable to parse customer",
             new JsonLocation(new Object(), 234L, 234L, 123, 123)));
-    customerService.publishToKafka(prepareCustomer(), "12345678", "app234567");
+    customerService.publishToKafka(CustomerDataUtil.prepareCustomer(), "12345678", "app234567");
 
   }
 
 
 
-  private Customer prepareCustomer() {
-    Customer customer = new Customer();
-    customer.setCustomerNumber("C00000987654321");
-    customer.setFirstName("customer first name");
-    customer.setLastName("customer last name");
-    customer.setBirthDate(LocalDate.of(1999, 05, 01));
-    customer.setCountry("India");
-    customer.setCountryCode("IN");
-    customer.setMobileNumber(BigInteger.valueOf(24459239487L));
-    customer.setEmail("customer@gmail.com");
-    customer.setCustomerStatus(CustomerStatusEnum.O);
-
-    Address address = new Address();
-
-    address.setAddressLine1("AddressLine1");
-    address.setAddressLine2("AddressLine2");
-    address.setStreet("Street");
-    address.setPostalCode("32904823");
-    customer.setAddress(address);
-
-    return customer;
-
-  }
-
+  
 }
