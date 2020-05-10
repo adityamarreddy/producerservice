@@ -3,8 +3,6 @@ package com.prokarma.retail.customer.service.producer.service;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +19,7 @@ import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prokarma.retail.customer.service.producer.model.Address;
 import com.prokarma.retail.customer.service.producer.model.Customer;
-import com.prokarma.retail.customer.service.producer.model.Customer.CustomerStatusEnum;
 import com.prokarma.retail.customer.service.producer.service.helper.MaskHelper;
 import com.prokarma.retail.customer.service.producer.util.CustomerDataUtil;
 

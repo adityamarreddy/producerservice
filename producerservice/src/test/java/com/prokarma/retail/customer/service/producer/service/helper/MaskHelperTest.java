@@ -27,9 +27,9 @@ public class MaskHelperTest {
 
   @Test
   public void testCustomerMaskingWithCustomerAsNull() {
-
+    Customer expected = null;
     Customer maskCustomer = maskHelper.maskCustomer(null);
-    assertEquals(null, null);
+    assertEquals(expected, maskCustomer);
   }
 
   @Test
