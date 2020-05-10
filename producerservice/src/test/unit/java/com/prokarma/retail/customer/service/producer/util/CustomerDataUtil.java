@@ -7,7 +7,7 @@ import com.prokarma.retail.customer.service.producer.model.Customer;
 import com.prokarma.retail.customer.service.producer.model.Customer.CustomerStatusEnum;
 
 public class CustomerDataUtil {
-  
+
   public static Customer prepareCustomer() {
     Customer customer = new Customer();
     customer.setCustomerNumber("C00000987654321");

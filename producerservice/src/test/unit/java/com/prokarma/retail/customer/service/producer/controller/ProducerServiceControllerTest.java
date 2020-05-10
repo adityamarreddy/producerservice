@@ -17,17 +17,18 @@ import com.prokarma.retail.customer.service.producer.service.CustomerService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProducerServiceControllerTest {
-  
+
   @Mock
   private CustomerService customerService;
-  
+
   @InjectMocks
   private ProducerServiceController producerServiceController;
-  
+
 
   @Test
   public void test() throws JsonProcessingException, InterruptedException, ExecutionException {
-    ResponseEntity<Response> response = producerServiceController.addCustomer(null, "12344t345yuty", "app12345566");
+    ResponseEntity<Response> response =
+        producerServiceController.addCustomer(null, "12344t345yuty", "app12345566");
     assertEquals(StatusEnum.SUCCESS, response.getBody().getStatus());
   }
 

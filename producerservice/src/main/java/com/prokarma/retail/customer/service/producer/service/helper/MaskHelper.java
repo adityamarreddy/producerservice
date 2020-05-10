@@ -1,6 +1,9 @@
 package com.prokarma.retail.customer.service.producer.service.helper;
 
-import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.*;
+import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.CUSTOMER_NUMBER_MASK_REGEX;
+import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.CUSTOMER_NUMBER_MASK_REPLACE_TEXT;
+import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.EMAIL_MASK_REGEX;
+import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.EMAIL_MASK_REPLACE_TEXT;
 import org.springframework.stereotype.Component;
 import com.prokarma.retail.customer.service.producer.model.Address;
 import com.prokarma.retail.customer.service.producer.model.Customer;

@@ -4,7 +4,7 @@ public class ProducerServiceConstants {
 
 
   private ProducerServiceConstants() {
-    //private constructor
+    // private constructor
   }
 
   public static final String CUSTOMER_NUMBER_MASK_REGEX = ".{4}$";

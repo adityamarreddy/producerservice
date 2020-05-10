@@ -21,16 +21,17 @@ public class MaskHelperTest {
     customer.setAddress(address);
     Customer maskCustomer = maskHelper.maskCustomer(customer);
     assertEquals("C0000100010001****", maskCustomer.getCustomerNumber());
-    assertEquals("****omer@gmail.com",maskCustomer.getEmail());
+    assertEquals("****omer@gmail.com", maskCustomer.getEmail());
 
   }
 
   @Test
   public void testCustomerMaskingWithCustomerAsNull() {
-  
+
     Customer maskCustomer = maskHelper.maskCustomer(null);
-    assertEquals(null,null);
+    assertEquals(null, null);
   }
+
   @Test
   public void testCustomerMaskingWithAddressAsNull() {
     Customer customer = new Customer();
@@ -39,7 +40,7 @@ public class MaskHelperTest {
     customer.setAddress(null);
     Customer maskCustomer = maskHelper.maskCustomer(customer);
     assertEquals("C0000100010001****", maskCustomer.getCustomerNumber());
-    assertEquals("****omer@gmail.com",maskCustomer.getEmail());
+    assertEquals("****omer@gmail.com", maskCustomer.getEmail());
 
   }
 }

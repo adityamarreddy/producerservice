@@ -44,7 +44,6 @@ public interface CustomerApi {
           required = true) String activityId,
       @ApiParam(value = "", required = true) @RequestHeader(value = "Application-Id",
           required = true) String applicationId)
-      throws InterruptedException, ExecutionException,
-      JsonProcessingException;
+      throws InterruptedException, ExecutionException, JsonProcessingException;
 
 }

@@ -33,10 +33,10 @@ public class CustomerService {
       throws InterruptedException, ExecutionException, JsonProcessingException {
 
     try {
-      if(LOGGER.isInfoEnabled()) {
-      LOGGER.info(String.format("Kafka publish:: activityId=%s and applicationId=%s and message %s",
-          activityId, applicationId,
-          jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))));
+      if (LOGGER.isInfoEnabled()) {
+        LOGGER.info(String.format(
+            "Kafka publish:: activityId=%s and applicationId=%s and message %s", activityId,
+            applicationId, jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))));
       }
       ListenableFuture<SendResult<String, String>> future =
           kafkaTemplate.send("customerTopic", jsonMapper.writeValueAsString(customer));
@@ -53,8 +53,7 @@ public class CustomerService {
               activityId, applicationId),
           ex);
       throw ex;
-    }
-    catch (Exception ex) {
+    } catch (Exception ex) {
       LOGGER.error(String.format(
           "failed to publish record to kafka:: :: activityId=%s and applicationId=%s and message %s",
           activityId, applicationId,

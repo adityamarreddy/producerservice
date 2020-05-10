@@ -13,23 +13,24 @@ import com.prokarma.retail.customer.service.producer.service.logging.LoggingServ
 
 @ControllerAdvice
 public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
-    
-    @Autowired
-    LoggingService loggingService;
-    
-    @Autowired
-    HttpServletRequest httpServletRequest;
-    
-    @Override
-    public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
-        return true;
-    }
-    
-    @Override
-    public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType,
-            Class<? extends HttpMessageConverter<?>> converterType) {
-        loggingService.logRequest(httpServletRequest, body);
-        
-        return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
-    }
+
+  @Autowired
+  LoggingService loggingService;
+
+  @Autowired
+  HttpServletRequest httpServletRequest;
+
+  @Override
+  public boolean supports(MethodParameter methodParameter, Type type,
+      Class<? extends HttpMessageConverter<?>> aClass) {
+    return true;
+  }
+
+  @Override
+  public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
+      Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+    loggingService.logRequest(httpServletRequest, body);
+
+    return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
+  }
 }

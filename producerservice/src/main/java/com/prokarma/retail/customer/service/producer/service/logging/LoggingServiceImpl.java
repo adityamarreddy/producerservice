@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import com.prokarma.retail.customer.service.producer.service.CustomerService;
-import lombok.extern.java.Log;
 
 @Component
 
@@ -20,7 +18,7 @@ public class LoggingServiceImpl implements LoggingService {
 
   @Override
   public void logRequest(HttpServletRequest httpServletRequest, Object body) {
-    if(!httpServletRequest.getRequestURI().contains("swagger")){
+    if (!httpServletRequest.getRequestURI().contains("swagger")) {
       StringBuilder stringBuilder = new StringBuilder();
       Map<String, String> parameters = buildParametersMap(httpServletRequest);
 
@@ -36,30 +34,30 @@ public class LoggingServiceImpl implements LoggingService {
       if (body != null) {
         stringBuilder.append("body=[" + body + "]");
       }
-
-      LOGGER.info(stringBuilder.toString());
+      if (LOGGER.isInfoEnabled())
+        LOGGER.info(stringBuilder.toString());
     }
-    
-   
+
+
   }
 
   @Override
   public void logResponse(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, Object body) {
-    if(!httpServletRequest.getRequestURI().contains("swagger")){
-    StringBuilder stringBuilder = new StringBuilder();
+    if (!httpServletRequest.getRequestURI().contains("swagger")) {
+      StringBuilder stringBuilder = new StringBuilder();
 
-    stringBuilder.append("RESPONSE ");
-    stringBuilder.append("method=[").append(httpServletRequest.getMethod()).append("] ");
-    stringBuilder.append("path=[").append(httpServletRequest.getRequestURI()).append("] ");
-    stringBuilder.append("requestHeaders=[").append(buildHeadersMap(httpServletRequest))
-        .append("] ");
-    stringBuilder.append("responseHeaders=[").append(buildHeadersMap(httpServletResponse))
-        .append("] ");
-    stringBuilder.append("responseBody=[").append(body).append("] ");
-
-    LOGGER.info(stringBuilder.toString());
-  }
+      stringBuilder.append("RESPONSE ");
+      stringBuilder.append("method=[").append(httpServletRequest.getMethod()).append("] ");
+      stringBuilder.append("path=[").append(httpServletRequest.getRequestURI()).append("] ");
+      stringBuilder.append("requestHeaders=[").append(buildHeadersMap(httpServletRequest))
+          .append("] ");
+      stringBuilder.append("responseHeaders=[").append(buildHeadersMap(httpServletResponse))
+          .append("] ");
+      stringBuilder.append("responseBody=[").append(body).append("] ");
+      if (LOGGER.isInfoEnabled())
+        LOGGER.info(stringBuilder.toString());
+    }
   }
 
   private Map<String, String> buildParametersMap(HttpServletRequest httpServletRequest) {
