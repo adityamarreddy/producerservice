@@ -7,8 +7,8 @@ public class ProducerServiceConstants {
     // private constructor
   }
 
-  public static final String CUSTOMER_NUMBER_MASK_REGEX = ".{4}$";
-  public static final String CUSTOMER_NUMBER_MASK_REPLACE_TEXT = "****";
-  public static final String EMAIL_MASK_REGEX = "^\\w{4}";
-  public static final String EMAIL_MASK_REPLACE_TEXT = "****";
+  public static final String LAST_FOUR_CHAR_MASK_REGEX = ".{4}$";
+  public static final String LAST_FOUR_CHAR_MASK_REPLACE_TEXT = "****";
+  public static final String FIRST_FOUR_CHAR_MASK_REGEX = "^\\S{4}";
+  public static final String FIRST_FOUR_CHAR_MASK_REPLACE_TEXT = "****";
 }

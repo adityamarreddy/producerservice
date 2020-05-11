@@ -1,9 +1,6 @@
 package com.prokarma.retail.customer.service.producer.service.helper;
 
-import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.CUSTOMER_NUMBER_MASK_REGEX;
-import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.CUSTOMER_NUMBER_MASK_REPLACE_TEXT;
-import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.EMAIL_MASK_REGEX;
-import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.EMAIL_MASK_REPLACE_TEXT;
+import static com.prokarma.retail.customer.service.producer.constants.ProducerServiceConstants.*;
 import org.springframework.stereotype.Component;
 import com.prokarma.retail.customer.service.producer.model.Address;
 import com.prokarma.retail.customer.service.producer.model.Customer;
@@ -20,26 +17,26 @@ public class MaskHelper {
 
     Customer customer = new Customer();
 
-    customer.setCustomerNumber(maskCustomerNumber(source.getCustomerNumber()));
+    customer.setCustomerNumber(maskLastFourCharacters(source.getCustomerNumber()));
     customer.setFirstName(source.getFirstName());
     customer.setLastName(source.getLastName());
-    customer.setBirthDate(source.getBirthDate());
+    customer.setBirthDate(maskFirstFourCharacters(source.getBirthDate()));
     customer.setCountry(source.getCountry());
     customer.setCountryCode(source.getCountryCode());
     customer.setMobileNumber(source.getMobileNumber());
-    customer.setEmail(maskEmail(source.getEmail()));
+    customer.setEmail(maskFirstFourCharacters(source.getEmail()));
     customer.setCustomerStatus(source.getCustomerStatus());
     customer.setAddress(addressToAddress(source.getAddress()));
 
     return customer;
   }
 
-  private String maskCustomerNumber(String customerNumber) {
-    return customerNumber.replaceAll(CUSTOMER_NUMBER_MASK_REGEX, CUSTOMER_NUMBER_MASK_REPLACE_TEXT);
+  private String maskLastFourCharacters(String input) {
+    return input.replaceAll(LAST_FOUR_CHAR_MASK_REGEX, LAST_FOUR_CHAR_MASK_REPLACE_TEXT);
   }
 
-  private String maskEmail(String email) {
-    return email.replaceAll(EMAIL_MASK_REGEX, EMAIL_MASK_REPLACE_TEXT);
+  private String maskFirstFourCharacters(String input) {
+    return input.replaceAll(FIRST_FOUR_CHAR_MASK_REGEX, FIRST_FOUR_CHAR_MASK_REPLACE_TEXT);
   }
 
   protected Address addressToAddress(Address address) {
