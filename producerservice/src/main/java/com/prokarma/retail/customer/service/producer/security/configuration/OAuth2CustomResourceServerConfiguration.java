@@ -11,7 +11,7 @@ import com.prokarma.retail.customer.service.producer.security.CustomOAuth2Authen
 
 @Configuration
 // @ConditionalOnProperty(prefix = "spring", name = "enableoauth2", havingValue = "true")
-//@Profile("!test")
+// @Profile("!test")
 @EnableAuthorizationServer
 @EnableResourceServer
 public class OAuth2CustomResourceServerConfiguration extends ResourceServerConfigurerAdapter {
@@ -25,14 +25,13 @@ public class OAuth2CustomResourceServerConfiguration extends ResourceServerConfi
     if (isSecurityEnabled) {
       http.authorizeRequests().antMatchers("/customer/**").authenticated().antMatchers("/")
           .permitAll();
-    }
-    else {
+    } else {
       http.authorizeRequests().antMatchers("/").permitAll();
     }
   }
 
   @Override
   public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-      resources.authenticationEntryPoint(new CustomOAuth2AuthenticationEntryPoint());
+    resources.authenticationEntryPoint(new CustomOAuth2AuthenticationEntryPoint());
   }
 }

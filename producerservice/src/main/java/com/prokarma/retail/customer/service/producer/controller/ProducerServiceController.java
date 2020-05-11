@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.prokarma.retail.customer.service.producer.exception.ProducerServiceException;
 import com.prokarma.retail.customer.service.producer.model.Customer;
 import com.prokarma.retail.customer.service.producer.model.Response;
 import com.prokarma.retail.customer.service.producer.model.Response.StatusEnum;
@@ -27,7 +28,7 @@ public class ProducerServiceController implements CustomerApi {
   public ResponseEntity<Response> addCustomer(@Valid @RequestBody Customer customer,
       @RequestHeader(value = "Activity-Id", required = true) String activityId,
       @RequestHeader(value = "Application-Id", required = true) String applicationId)
-      throws InterruptedException, ExecutionException, JsonProcessingException {
+      throws ProducerServiceException {
 
     service.publishToKafka(customer, activityId, applicationId);
     return new ResponseEntity<>(

@@ -73,8 +73,8 @@ public class CustomOAuth2WebResponseExceptionTranslator
           String.format("%s %s", OAuth2AccessToken.BEARER_TYPE, e.getSummary()));
     }
 
-   return new ResponseEntity<>(new Response().message(e.getMessage())
-        .status(StatusEnum.ERROR).errorType(e.getClass().getName()), HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(new Response().message(e.getMessage()).status(StatusEnum.ERROR)
+        .errorType(e.getClass().getName()), HttpStatus.UNAUTHORIZED);
 
   }
 

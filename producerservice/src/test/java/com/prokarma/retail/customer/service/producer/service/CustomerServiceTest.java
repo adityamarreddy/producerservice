@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prokarma.retail.customer.service.producer.exception.ProducerServiceException;
 import com.prokarma.retail.customer.service.producer.model.Customer;
 import com.prokarma.retail.customer.service.producer.service.helper.MaskHelper;
 import com.prokarma.retail.customer.service.producer.util.CustomerDataUtil;
@@ -41,8 +42,8 @@ public class CustomerServiceTest {
   }
 
   @Test
-  public void testPublishToKafka()
-      throws JsonProcessingException, InterruptedException, ExecutionException {
+  public void testPublishToKafka() throws JsonProcessingException, InterruptedException,
+      ExecutionException, ProducerServiceException {
     when(jsonMapper.writeValueAsString(Mockito.any(Customer.class))).thenCallRealMethod();
     when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(new AsyncResult<SendResult<String, String>>(null));
@@ -51,9 +52,9 @@ public class CustomerServiceTest {
 
   }
 
-  @Test(expected = ExecutionException.class)
+  @Test(expected = ProducerServiceException.class)
   public void testPublishToKafkaResultingInExecutionException()
-      throws JsonProcessingException, InterruptedException, ExecutionException {
+      throws JsonProcessingException, ProducerServiceException {
     when(jsonMapper.writeValueAsString(Mockito.any(Customer.class))).thenCallRealMethod();
     ListenableFuture<SendResult<String, String>> forExecutionException =
         AsyncResult.forExecutionException(new ExecutionException(new InterruptedException()));
@@ -64,19 +65,22 @@ public class CustomerServiceTest {
   }
 
 
-  @Test(expected = Exception.class)
-  public void testPublishToKafkaResultingInException()
-      throws JsonProcessingException, InterruptedException, ExecutionException {
+  @Test(expected = ProducerServiceException.class)
+  public void testPublishToKafkaResultingInException() throws JsonProcessingException,
+      InterruptedException, ExecutionException, ProducerServiceException {
     when(jsonMapper.writeValueAsString(Mockito.any(Customer.class))).thenCallRealMethod();
-    when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+    ListenableFuture<SendResult<String, String>> forExecutionException =
+        AsyncResult.forExecutionException(new ExecutionException(new InterruptedException()));
+    when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(forExecutionException);
     customerService.publishToKafka(CustomerDataUtil.prepareCustomer(), "12345678", "app234567");
 
   }
 
   @SuppressWarnings("deprecation")
-  @Test(expected = JsonProcessingException.class)
-  public void testPublishToKafkaResultingInJsonProcessingException()
-      throws JsonProcessingException, InterruptedException, ExecutionException {
+  @Test(expected = ProducerServiceException.class)
+  public void testPublishToKafkaResultingInJsonProcessingException() throws JsonProcessingException,
+      InterruptedException, ExecutionException, ProducerServiceException {
     when(jsonMapper.writeValueAsString(Mockito.any(Customer.class)))
         .thenThrow(new JsonParseException("unable to parse customer",
             new JsonLocation(new Object(), 234L, 234L, 123, 123)));

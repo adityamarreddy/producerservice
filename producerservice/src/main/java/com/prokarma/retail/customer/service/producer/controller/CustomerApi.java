@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.prokarma.retail.customer.service.producer.exception.ProducerServiceException;
 import com.prokarma.retail.customer.service.producer.model.Customer;
 import com.prokarma.retail.customer.service.producer.model.Response;
 import io.swagger.annotations.Api;
@@ -44,6 +45,6 @@ public interface CustomerApi {
           required = true) String activityId,
       @ApiParam(value = "", required = true) @RequestHeader(value = "Application-Id",
           required = true) String applicationId)
-      throws InterruptedException, ExecutionException, JsonProcessingException;
+      throws JsonProcessingException, ProducerServiceException;
 
 }

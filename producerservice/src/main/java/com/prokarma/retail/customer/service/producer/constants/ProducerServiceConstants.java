@@ -1,6 +1,6 @@
 package com.prokarma.retail.customer.service.producer.constants;
 
-public class ProducerServiceConstants {
+public final class ProducerServiceConstants {
 
 
   private ProducerServiceConstants() {

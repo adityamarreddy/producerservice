@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.prokarma.retail.customer.service.producer.exception.ProducerServiceException;
 import com.prokarma.retail.customer.service.producer.model.Response;
 import com.prokarma.retail.customer.service.producer.model.Response.StatusEnum;
 
@@ -74,7 +75,8 @@ public class GlobalExceptionHandler {
         .errorType(ex.getClass().getName()), HttpStatus.UNAUTHORIZED);
   }
 
-  @ExceptionHandler({JsonProcessingException.class, Exception.class})
+  @ExceptionHandler({ProducerServiceException.class, JsonProcessingException.class,
+      Exception.class})
   public ResponseEntity<Response> handleAllExceptions(Exception ex) {
     return new ResponseEntity<>(new Response().message(ex.getMessage()).status(StatusEnum.ERROR)
         .errorType(ex.getClass().getName()), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -47,6 +47,6 @@ public class MaskHelperTest {
     assertEquals("****2-2020", maskCustomer.getBirthDate());
 
   }
-  
+
 }
 

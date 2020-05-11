@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prokarma.retail.customer.service.producer.exception.ProducerServiceException;
 import com.prokarma.retail.customer.service.producer.model.Customer;
 import com.prokarma.retail.customer.service.producer.service.helper.MaskHelper;
 
@@ -30,35 +31,45 @@ public class CustomerService {
   }
 
   public void publishToKafka(Customer customer, String activityId, String applicationId)
-      throws InterruptedException, ExecutionException, JsonProcessingException {
+      throws ProducerServiceException {
 
     try {
       if (LOGGER.isInfoEnabled()) {
-        LOGGER.info(String.format(
-            "Kafka publish:: activityId=%s and applicationId=%s and message %s", activityId,
-            applicationId, jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))));
+        LOGGER
+            .info(String.format("Kafka publish:: activityId=%s and applicationId=%s and message %s",
+                activityId, applicationId,
+                writeAsJson(maskHelper.maskCustomer(customer), activityId, applicationId)));
       }
       ListenableFuture<SendResult<String, String>> future =
-          kafkaTemplate.send("customerTopic", jsonMapper.writeValueAsString(customer));
+          kafkaTemplate.send("customerTopic", writeAsJson(customer, activityId, applicationId));
       future.get();
     } catch (ExecutionException ex) {
       LOGGER.error(String.format(
           "failed to publish record to kafka:::: activityId=%s and applicationId=%s and message %s",
           activityId, applicationId,
-          jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))), ex);
-      throw ex;
-    } catch (JsonProcessingException ex) {
-      LOGGER.error(
-          String.format("Unable to convert customer to json :: activityId=%s and applicationId=%s",
-              activityId, applicationId),
-          ex);
-      throw ex;
-    } catch (Exception ex) {
+          writeAsJson(maskHelper.maskCustomer(customer), activityId, applicationId)), ex);
+      throw new ProducerServiceException(ex);
+    } catch (InterruptedException ex) {
       LOGGER.error(String.format(
           "failed to publish record to kafka:: :: activityId=%s and applicationId=%s and message %s",
           activityId, applicationId,
-          jsonMapper.writeValueAsString(maskHelper.maskCustomer(customer))), ex);
-      throw ex;
+          writeAsJson(maskHelper.maskCustomer(customer), activityId, applicationId), ex));
+      throw new ProducerServiceException(ex);
+    }
+
+  }
+
+  private String writeAsJson(Customer customer, String activityId, String applicationId)
+      throws ProducerServiceException {
+
+    try {
+      return jsonMapper.writeValueAsString(customer);
+    } catch (JsonProcessingException e) {
+      LOGGER.error(
+          String.format("Unable to convert customer to json :: activityId=%s and applicationId=%s",
+              activityId, applicationId),
+          e);
+      throw new ProducerServiceException(e);
     }
 
   }

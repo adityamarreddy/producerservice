@@ -13,7 +13,7 @@ public class CustomerDataUtil {
     customer.setCustomerNumber("C00000987654321");
     customer.setFirstName("customer first name");
     customer.setLastName("customer last name");
-    customer.setBirthDate("1999-05-01");//LocalDate.of(1999, 05, 01));
+    customer.setBirthDate("1999-05-01");// LocalDate.of(1999, 05, 01));
     customer.setCountry("India");
     customer.setCountryCode("IN");
     customer.setMobileNumber(BigInteger.valueOf(24459239487L));

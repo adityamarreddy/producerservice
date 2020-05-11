@@ -251,7 +251,8 @@ public class Customer {
    **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-  @Pattern(message = "Invalid email", regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+  @Pattern(message = "Invalid email",
+      regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
   public String getEmail() {
     return email;
   }
